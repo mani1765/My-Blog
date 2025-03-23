@@ -1,3 +1,4 @@
+
 export type Author = {
   name: string;
   avatar?: string;
@@ -330,14 +331,14 @@ pipeline {
         
         stage('Docker Build') {
             steps {
-                sh 'docker build -t myapp:$\{BUILD_NUMBER\} .'
+                sh 'docker build -t myapp:\${BUILD_NUMBER} .'
             }
         }
         
         stage('Deploy to Staging') {
             steps {
                 sh 'kubectl apply -f kubernetes/staging/'
-                sh 'kubectl set image deployment/myapp myapp=myapp:$\{BUILD_NUMBER\} -n staging'
+                sh 'kubectl set image deployment/myapp myapp=myapp:\${BUILD_NUMBER} -n staging'
             }
         }
     }
@@ -347,10 +348,10 @@ pipeline {
             cleanWs()
         }
         success {
-            slackSend channel: '#deployments', color: 'good', message: "Build Successful: $\{env.JOB_NAME\} $\{env.BUILD_NUMBER\}"
+            slackSend channel: '#deployments', color: 'good', message: "Build Successful: \${env.JOB_NAME} \${env.BUILD_NUMBER}"
         }
         failure {
-            slackSend channel: '#deployments', color: 'danger', message: "Build Failed: $\{env.JOB_NAME\} $\{env.BUILD_NUMBER\}"
+            slackSend channel: '#deployments', color: 'danger', message: "Build Failed: \${env.JOB_NAME} \${env.BUILD_NUMBER}"
         }
     }
 }
@@ -415,7 +416,7 @@ def call() {
 // In your shared library (vars/standardDeploy.groovy)
 def call(Map config) {
     def environmentName = config.env ?: 'dev'
-    sh "kubectl apply -f kubernetes/$\{environmentName\}/"
+    sh "kubectl apply -f kubernetes/\${environmentName}/"
 }
       </code></pre>
 
@@ -889,3 +890,14 @@ const db = require('db').connect({
 kubectl create secret generic db-credentials \\
   --from-literal=username=admin \\
   --from-literal=password=supersecretpassword
+      </code></pre>
+    `,
+    date: "Oct 22, 2023",
+    category: "Containers",
+    imageUrl: "https://images.unsplash.com/photo-1605744349329-dee34563bcc2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80",
+    author: {
+      name: "Lisa Johnson",
+      avatar: "https://randomuser.me/api/portraits/women/18.jpg"
+    }
+  }
+];
