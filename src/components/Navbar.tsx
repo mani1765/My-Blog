@@ -31,8 +31,8 @@ const Navbar = () => {
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           <NavLink to="/" className="flex items-center space-x-2 font-medium">
-            <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blog-blue to-blog-purple">
-              Minima
+            <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-cyan-500">
+              DevOpsHub
             </span>
           </NavLink>
 
@@ -42,8 +42,8 @@ const Navbar = () => {
               { name: "Home", path: "/" },
               { name: "Blog", path: "/blog" },
               { name: "Categories", path: "/categories" },
-              { name: "About", path: "/about" },
-              { name: "Contact", path: "/contact" },
+              { name: "Tutorials", path: "/tutorials" },
+              { name: "Resources", path: "/resources" },
             ].map((item) => (
               <NavLink
                 key={item.name}
@@ -84,8 +84,8 @@ const Navbar = () => {
               { name: "Home", path: "/" },
               { name: "Blog", path: "/blog" },
               { name: "Categories", path: "/categories" },
-              { name: "About", path: "/about" },
-              { name: "Contact", path: "/contact" },
+              { name: "Tutorials", path: "/tutorials" },
+              { name: "Resources", path: "/resources" },
             ].map((item, i) => (
               <NavLink
                 key={item.name}
