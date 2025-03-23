@@ -331,14 +331,14 @@ pipeline {
         
         stage('Docker Build') {
             steps {
-                sh 'docker build -t myapp:${BUILD_NUMBER} .'
+                sh 'docker build -t myapp:$\{BUILD_NUMBER\} .'
             }
         }
         
         stage('Deploy to Staging') {
             steps {
                 sh 'kubectl apply -f kubernetes/staging/'
-                sh 'kubectl set image deployment/myapp myapp=myapp:${BUILD_NUMBER} -n staging'
+                sh 'kubectl set image deployment/myapp myapp=myapp:$\{BUILD_NUMBER\} -n staging'
             }
         }
     }
@@ -348,10 +348,10 @@ pipeline {
             cleanWs()
         }
         success {
-            slackSend channel: '#deployments', color: 'good', message: "Build Successful: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+            slackSend channel: '#deployments', color: 'good', message: "Build Successful: $\{env.JOB_NAME\} $\{env.BUILD_NUMBER\}"
         }
         failure {
-            slackSend channel: '#deployments', color: 'danger', message: "Build Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+            slackSend channel: '#deployments', color: 'danger', message: "Build Failed: $\{env.JOB_NAME\} $\{env.BUILD_NUMBER\}"
         }
     }
 }
@@ -415,8 +415,8 @@ def call() {
 
 // In your shared library (vars/standardDeploy.groovy)
 def call(Map config) {
-    def environment = config.env ?: 'dev'
-    sh "kubectl apply -f kubernetes/${environment}/"
+    def environmentName = config.env ?: 'dev'
+    sh "kubectl apply -f kubernetes/$\{environmentName\}/"
 }
       </code></pre>
 
@@ -1045,4 +1045,3 @@ string password = secret.Value;
     }
   }
 ];
-
