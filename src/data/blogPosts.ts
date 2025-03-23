@@ -1,4 +1,3 @@
-
 export type Author = {
   name: string;
   avatar?: string;
@@ -889,15 +888,4 @@ const db = require('db').connect({
 # Create a secret from literal values
 kubectl create secret generic db-credentials \\
   --from-literal=username=admin \\
-  --from-literal=password=supersecretpassword
-      </code></pre>
-    `,
-    date: "Oct 22, 2023",
-    category: "Containers",
-    imageUrl: "https://images.unsplash.com/photo-1605744349329-dee34563bcc2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80",
-    author: {
-      name: "Lisa Johnson",
-      avatar: "https://randomuser.me/api/portraits/women/18.jpg"
-    }
-  }
-];
+  --from-literal=password=
