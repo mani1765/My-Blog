@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { ThemeToggle } from './ThemeToggle';
@@ -61,21 +60,15 @@ const Navbar = () => {
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center">
             <ThemeToggle />
-            <Button variant="ghost" size="sm" className="font-medium">
-              Sign in
-            </Button>
-            <Button size="sm" className="font-medium">
-              Get started
-            </Button>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-4">
+          <div className="md:hidden flex items-center">
             <ThemeToggle />
             <button
-              className="text-foreground"
+              className="text-foreground ml-4"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
@@ -109,14 +102,6 @@ const Navbar = () => {
                 {item.name}
               </NavLink>
             ))}
-            <div className="flex flex-col space-y-2 pt-4 animate-slide-in stagger-3">
-              <Button variant="ghost" className="justify-start font-medium">
-                Sign in
-              </Button>
-              <Button className="w-full font-medium">
-                Get started
-              </Button>
-            </div>
           </nav>
         )}
       </div>
