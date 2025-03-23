@@ -1,4 +1,3 @@
-
 export type Author = {
   name: string;
   avatar?: string;
@@ -125,12 +124,12 @@ resource "aws_subnet" "public" {
   count = 2
   
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.${count.index}.0/24"
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  cidr_block              = "10.0.\${count.index}.0/24"
+  availability_zone       = data.aws_availability_zones.available.names[\${count.index}]
   map_public_ip_on_launch = true
   
   tags = {
-    Name = "PublicSubnet-${count.index + 1}"
+    Name = "PublicSubnet-\${count.index + 1}"
   }
 }
 
@@ -139,11 +138,11 @@ resource "aws_subnet" "private" {
   count = 2
   
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.${count.index + 10}.0/24"
-  availability_zone = data.aws_availability_zones.available.names[count.index]
+  cidr_block        = "10.0.\${count.index + 10}.0/24"
+  availability_zone = data.aws_availability_zones.available.names[\${count.index}]
   
   tags = {
-    Name = "PrivateSubnet-${count.index + 1}"
+    Name = "PrivateSubnet-\${count.index + 1}"
   }
 }
       </code></pre>
@@ -890,158 +889,3 @@ const db = require('db').connect({
 kubectl create secret generic db-credentials \\
   --from-literal=username=admin \\
   --from-literal=password=supersecretpassword
-
-# Create a secret from files
-kubectl create secret generic tls-certs \\
-  --from-file=cert.pem \\
-  --from-file=key.pem
-
-# Create a secret using YAML
-apiVersion: v1
-kind: Secret
-metadata:
-  name: app-secrets
-type: Opaque
-data:
-  api-key: UzBlTXFaUk1aeVR3Uk9OM3RtTU5qQT09  # Base64 encoded
-      </code></pre>
-
-      <h3>Using Secrets in Pods</h3>
-      <pre><code>
-# Mount secrets as volumes
-apiVersion: v1
-kind: Pod
-metadata:
-  name: app-pod
-spec:
-  containers:
-  - name: app
-    image: myapp:1.0
-    volumeMounts:
-    - name: secrets
-      mountPath: "/etc/secrets"
-      readOnly: true
-  volumes:
-  - name: secrets
-    secret:
-      secretName: app-secrets
-
-# Use secrets as environment variables
-apiVersion: v1
-kind: Pod
-metadata:
-  name: db-client
-spec:
-  containers:
-  - name: db-client
-    image: db-client:1.0
-    env:
-    - name: DB_USER
-      valueFrom:
-        secretKeyRef:
-          name: db-credentials
-          key: username
-    - name: DB_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: db-credentials
-          key: password
-      </code></pre>
-
-      <h2>External Secret Management Systems</h2>
-      <p>For enhanced security and functionality, consider external secret management tools:</p>
-      
-      <h3>HashiCorp Vault</h3>
-      <p>Vault provides comprehensive secrets management with dynamic secrets, encryption, and fine-grained access control:</p>
-      <pre><code>
-# Example of using Vault with Kubernetes
-apiVersion: v1
-kind: Pod
-metadata:
-  name: vault-example
-spec:
-  serviceAccountName: vault-auth
-  containers:
-    - name: app
-      image: app:1.0
-      env:
-        - name: VAULT_ADDR
-          value: "https://vault.example.com:8200"
-        - name: JWT_PATH
-          value: "/var/run/secrets/kubernetes.io/serviceaccount/token"
-      </code></pre>
-
-      <h3>AWS Secrets Manager or Parameter Store</h3>
-      <p>For AWS environments, these services offer tight integration with IAM:</p>
-      <pre><code>
-// Example of retrieving secrets from AWS Secrets Manager (Node.js)
-const AWS = require('aws-sdk');
-const secretsManager = new AWS.SecretsManager();
-
-async function getDBCredentials() {
-  const data = await secretsManager.getSecretValue({
-    SecretId: 'prod/myapp/db'
-  }).promise();
-  
-  const secret = JSON.parse(data.SecretString);
-  return {
-    username: secret.username,
-    password: secret.password
-  };
-}
-      </code></pre>
-
-      <h3>Azure Key Vault</h3>
-      <p>For Azure environments, Key Vault provides similar functionality:</p>
-      <pre><code>
-// Example of retrieving secrets from Azure Key Vault (.NET)
-var secretClient = new SecretClient(
-    new Uri("https://mykeyvault.vault.azure.net/"),
-    new DefaultAzureCredential());
-
-KeyVaultSecret secret = await secretClient.GetSecretAsync("DbPassword");
-string password = secret.Value;
-      </code></pre>
-
-      <h2>Best Practices for Container Secrets Management</h2>
-      
-      <h3>Implement the Principle of Least Privilege</h3>
-      <ul>
-        <li>Grant containers access only to the secrets they need</li>
-        <li>Use service accounts with limited permissions</li>
-        <li>Regularly audit and rotate secrets</li>
-      </ul>
-
-      <h3>Encrypt Secrets at Rest and in Transit</h3>
-      <ul>
-        <li>Enable encryption for Kubernetes etcd (where secrets are stored)</li>
-        <li>Use TLS for all communication with secret management systems</li>
-        <li>Consider additional encryption layers for highly sensitive data</li>
-      </ul>
-
-      <h3>Implement Secret Rotation</h3>
-      <ul>
-        <li>Regularly rotate all secrets</li>
-        <li>Implement zero-downtime rotation mechanisms</li>
-        <li>Use short-lived, dynamically generated secrets where possible</li>
-      </ul>
-
-      <h3>Audit and Monitor Secret Access</h3>
-      <ul>
-        <li>Enable audit logging for secret access</li>
-        <li>Set up alerts for suspicious access patterns</li>
-        <li>Conduct regular security reviews</li>
-      </ul>
-
-      <h2>Conclusion</h2>
-      <p>Secure secrets management is a critical aspect of container security. By following the best practices outlined in this article and leveraging appropriate tools for your environment, you can protect sensitive information throughout your containerized applications while maintaining the flexibility and portability that make containers valuable. Remember that secrets management is not a one-time setup but an ongoing process that requires regular review and improvement as your applications and security requirements evolve.</p>
-    `,
-    date: "Oct 19, 2023",
-    category: "Containers",
-    imageUrl: "https://images.unsplash.com/photo-1586772002345-339f8042a777?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80",
-    author: {
-      name: "Sophia Lee",
-      avatar: "https://randomuser.me/api/portraits/women/33.jpg"
-    }
-  }
-];
